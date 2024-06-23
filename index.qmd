@@ -1,19 +1,86 @@
 ---
-title: "My document"
-format:
-  html:
-    toc: true
-    html-math-method: katex
-    css: styles.css
-    other-links:
-      - text: NASA Open Data
-        href: https://data.nasa.gov/
-    code-links:
-      - text: Data Import Code
-        icon: file-code
-        href: data-import.py
+title: "Eric Wilson's Education Data Project"
+execute:
+  echo: false
+    
 
 ---
+
+```{r}
+#| message: false
+#| label: setup
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(tidyr)
+
+# Load necessary libraries
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(tidyr)
+library(scales)  # Load scales library for formatting
+
+# Load the dataset
+data <- read_csv("ACSST1Y2022.S1502-2024-06-23T162809.csv")
+
+# Select relevant columns and rename them for clarity, and clean data
+data_clean <- data %>%
+  select(Label = `Label (Grouping)`,
+         Total_Estimate = `United States!!Total!!Estimate`,
+         Male_Estimate = `United States!!Male!!Estimate`,
+         Female_Estimate = `United States!!Female!!Estimate`) %>%
+  filter(!is.na(Total_Estimate)) %>%
+  mutate(Total_Estimate = as.numeric(gsub(",", "", Total_Estimate)),
+         Male_Estimate = as.numeric(gsub(",", "", Male_Estimate)),
+         Female_Estimate = as.numeric(gsub(",", "", Female_Estimate)),
+         Percent_Male = (Male_Estimate / Total_Estimate) * 100,
+         Percent_Female = (Female_Estimate / Total_Estimate) * 100)
+
+# Generate data for visualizations
+data_long <- data_clean %>%
+  gather(key = "Gender", value = "Estimate", Male_Estimate, Female_Estimate)
+
+# Visualizations
+# Distribution of Educational Attainment
+plot1 <- ggplot(data_clean, aes(x = reorder(Label, -Total_Estimate), y = Total_Estimate)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Total Educational Attainment by Field of Study",
+       x = "Field of Study",
+       y = "Total Estimate") +
+  theme_minimal() +
+  theme(plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  scale_y_continuous(labels = scales::comma)  # Use comma formatting
+
+# Gender Disparities in Educational Attainment
+plot2 <- ggplot(data_long, aes(x = reorder(Label, -Estimate), y = Estimate, fill = Gender)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  coord_flip() +
+  labs(title = "Educational Attainment by Gender and Field of Study",
+       x = "Field of Study",
+       y = "Estimate",
+       fill = "Gender") +
+  theme_minimal() +
+  theme(plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  scale_y_continuous(labels = scales::comma)  # Use comma formatting
+
+# Proportion of Males and Females in Each Field
+plot3 <- ggplot(data_clean, aes(x = reorder(Label, -Total_Estimate), y = Total_Estimate)) +
+  geom_bar(aes(y = Percent_Male, fill = "Male"), stat = "identity", position = "stack") +
+  geom_bar(aes(y = Percent_Female, fill = "Female"), stat = "identity", position = "stack") +
+  coord_flip() +
+  labs(title = "Proportion of Males and Females in Each Field of Study",
+       x = "Field of Study",
+       y = "Percentage",
+       fill = "Gender") +
+  theme_minimal() +
+  theme(plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  scale_y_continuous(labels = scales::percent)  # Use percent formatting for percentage values
+
+list(plot1, plot2, plot3)  # Return the list of plots
+```
 
 # Introduction
 
