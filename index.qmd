@@ -1,0 +1,45 @@
+---
+title: "My document"
+format:
+  html:
+    toc: true
+    html-math-method: katex
+    css: styles.css
+    other-links:
+      - text: NASA Open Data
+        href: https://data.nasa.gov/
+    code-links:
+      - text: Data Import Code
+        icon: file-code
+        href: data-import.py
+
+---
+
+# Introduction
+
+My name is Eric Wilson and I am a high school teacher in NYC.  You can check out my github by clicking here.  Feel free to reach out to me via email!
+
+This project aims to analyze the impact of socioeconomic factors on educational outcomes using U.S. Census data. Here's a link to the Github repo for my project. 
+
+The third sentence is “This project was created as a part of Kane’s Data Science Bootcamp.” linking the name of the course to the webpage: https://bootcamp.davidkane.info/.
+
+
+# Data Acquisition
+
+Describe the process of obtaining the data here.
+
+# Data Preparation
+
+Describe the steps taken to clean and prepare the data.
+
+# Data Analysis
+
+Perform exploratory data analysis and statistical analysis.
+
+# Visualization
+
+Present visualizations of the data and analysis results.
+
+# Conclusion
+
+Summarize the findings and discuss their implications for educational policy and practice.
